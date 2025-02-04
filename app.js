@@ -38,23 +38,28 @@ function sortearAmigo() {
     }
 
     let sorteio = [...amigos]; // Copia a lista original
-    let resultado = [];
 
-    amigos.forEach(amigo => {
-        let indice;
-        do {
-            indice = Math.floor(Math.random() * sorteio.length);
-        } while (sorteio[indice] === amigo); // Evita que a pessoa se sorteie
+    // Embaralha a lista
+    for (let i = sorteio.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [sorteio[i], sorteio[j]] = [sorteio[j], sorteio[i]];
+    }
 
-        resultado.push(`${amigo} -> ${sorteio[indice]}`);
-        sorteio.splice(indice, 1); // Remove o sorteado da lista
-    });
+    // Verifica se há alguém se sorteando e ajusta se necessário
+    for (let i = 0; i < amigos.length; i++) {
+        if (amigos[i] === sorteio[i]) { 
+            // Se alguém se sorteou, troca com o próximo (ou com o primeiro se for o último da lista)
+            const swapIndex = (i === amigos.length - 1) ? 0 : i + 1;
+            [sorteio[i], sorteio[swapIndex]] = [sorteio[swapIndex], sorteio[i]];
+        }
+    }
 
+    // Exibir os pares sorteados
     const listaResultado = document.getElementById("resultado");
-    listaResultado.innerHTML = ""; // Limpa o resultado anterior
-    resultado.forEach(par => {
+    listaResultado.innerHTML = "";
+    amigos.forEach((amigo, i) => {
         const item = document.createElement("li");
-        item.textContent = par;
+        item.textContent = `${amigo} -> ${sorteio[i]}`;
         listaResultado.appendChild(item);
     });
 }
